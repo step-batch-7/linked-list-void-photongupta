@@ -147,6 +147,15 @@ Element remove_at(List_ptr list, int position)
   return element;
 }
 
+Status clear_list(List_ptr list)
+{
+  while (!is_list_empty(list))
+  {
+    remove_from_end(list);
+  }
+  return Success;
+}
+
 void display_list(List_ptr list, Display displayer)
 {
   printf("Elements of the list are : \n");
