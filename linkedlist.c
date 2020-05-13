@@ -62,7 +62,7 @@ Status insert_at(List_ptr list, Element value, int position)
     return add_to_start(list, value);
 
   if (position == list->length)
-    return add_to_end(list, value);
+    return add_to_list(list, value);
 
   Node_ptr p_walk = list->first;
   for (int length = 0; length < position - 1; length++)
