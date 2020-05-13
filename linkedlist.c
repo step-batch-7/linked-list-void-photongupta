@@ -61,6 +61,9 @@ Status insert_at(List_ptr list, Element value, int position)
   if (position == 0)
     return add_to_start(list, value);
 
+  if (position == list->length)
+    return add_to_end(list, value);
+
   Node_ptr p_walk = list->first;
   for (int length = 0; length < position - 1; length++)
     p_walk = p_walk->next;
@@ -145,6 +148,20 @@ Element remove_at(List_ptr list, int position)
   free(p_walk);
   list->length -= 1;
   return element;
+}
+
+Element remove_first_occurrence(List_ptr list, Element value, Matcher matcher)
+{
+  Node_ptr p_walk = list->first;
+  for (int position = 0; p_walk != NULL; position++)
+  {
+    if ((*matcher)(p_walk->element, value))
+    {
+      return remove_at(list, position);
+    }
+    p_walk = p_walk->next;
+  }
+  return NULL;
 }
 
 Status clear_list(List_ptr list)
