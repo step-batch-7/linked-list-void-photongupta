@@ -40,8 +40,8 @@ Status add_to_start(List_ptr list, Element value)
   if (new_node == NULL)
     return Failure;
   Node_ptr previous_first_node = list->first;
-  list->first = new_node;
   new_node->next = previous_first_node;
+  list->first = new_node;
   list->length += 1;
   return Success;
 }
@@ -63,6 +63,18 @@ Status insert_at(List_ptr list, Element value, int position)
   p_walk->next = new_node;
   list->length += 1;
   return Success;
+}
+
+Status add_unique(List_ptr list, Element value, Matcher are_matching)
+{
+  Node_ptr p_walk = list->first;
+  while (p_walk != NULL)
+  {
+    if ((*are_matching)(p_walk->element, value))
+      return Failure;
+    p_walk = p_walk->next;
+  }
+  return add_to_list(list, value);
 }
 
 void display_list(List_ptr list, Display displayer)

@@ -42,6 +42,7 @@ typedef void (*ElementProcessor)(Element);
 typedef Status (*Matcher)(Element, Element);
 typedef void (*Display)(Element);
 
+Node_ptr create_node(Element);
 List_ptr create_list(void);
 
 Status add_to_list(List_ptr, Element);
