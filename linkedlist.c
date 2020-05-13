@@ -170,19 +170,12 @@ List_ptr remove_all_occurrences(List_ptr list, Element value, Matcher matcher)
   List_ptr removed_elements = create_list();
   Element element;
   Node_ptr p_walk = list->first;
-  for (int position = 0; p_walk != NULL; position++)
+  while (p_walk != NULL)
   {
-    if ((*matcher)(p_walk->element, value))
-    {
-      element = remove_at(list, position);
-      position -= 1;
-      p_walk = p_walk->next;
+    element = remove_first_occurrence(list, value, matcher);
+    p_walk = p_walk->next;
+    if (element)
       add_to_list(removed_elements, element);
-    }
-    else
-    {
-      p_walk = p_walk->next;
-    }
   }
   return removed_elements;
 }
