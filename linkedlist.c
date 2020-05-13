@@ -113,11 +113,12 @@ Element remove_from_end(List_ptr list)
     temp = p_walk;
     p_walk = p_walk->next;
   }
+  element = p_walk->element;
   free(p_walk);
   temp->next = NULL;
   list->last = temp;
   list->length -= 1;
-  return Success;
+  return element;
 }
 
 Element remove_at(List_ptr list, int position)
