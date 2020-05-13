@@ -172,7 +172,7 @@ List_ptr remove_all_occurrences(List_ptr list, Element value, Matcher matcher)
   {
     if ((*matcher)(p_walk->element, value))
     {
-      add_to_end(removed_elements, remove_at(list, position));
+      add_to_list(removed_elements, remove_at(list, position));
       position -= 1;
     }
     p_walk = p_walk->next;
