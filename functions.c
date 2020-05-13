@@ -59,5 +59,6 @@ void forEach(List_ptr list, ElementProcessor processor)
   while (p_walk != NULL)
   {
     (*processor)(p_walk->element);
+    p_walk = p_walk->next;
   }
 }
