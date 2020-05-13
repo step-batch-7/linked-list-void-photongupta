@@ -164,6 +164,22 @@ Element remove_first_occurrence(List_ptr list, Element value, Matcher matcher)
   return NULL;
 }
 
+List_ptr remove_all_occurrences(List_ptr list, Element value, Matcher matcher)
+{
+  List_ptr removed_elements = create_list();
+  Node_ptr p_walk = list->first;
+  for (int position = 0; p_walk != NULL; position++)
+  {
+    if ((*matcher)(p_walk->element, value))
+    {
+      add_to_end(removed_elements, remove_at(list, position));
+      position -= 1;
+    }
+    p_walk = p_walk->next;
+  }
+  return removed_elements;
+}
+
 Status clear_list(List_ptr list)
 {
   while (!is_list_empty(list))
