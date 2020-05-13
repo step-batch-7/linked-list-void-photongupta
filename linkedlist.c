@@ -19,6 +19,11 @@ List_ptr create_list()
   return list;
 }
 
+int is_list_empty(List_ptr list)
+{
+  return list->length == 0;
+}
+
 Status add_to_list(List_ptr list, Element element)
 {
 
@@ -88,6 +93,22 @@ List_ptr reverse(List_ptr list)
     p_walk = p_walk->next;
   }
   return reversed_list;
+}
+
+Element remove_from_start(List_ptr list)
+{
+  Element element = malloc(sizeof(Element));
+  if (is_list_empty(list))
+  {
+    element = NULL;
+    return element;
+  }
+  Node_ptr first_node = list->first;
+  element = first_node->element;
+  list->first = first_node->next;
+  free(first_node);
+  list->length -= 1;
+  return element;
 }
 
 void display_list(List_ptr list, Display displayer)
