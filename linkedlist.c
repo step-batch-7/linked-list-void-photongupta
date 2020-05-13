@@ -40,8 +40,10 @@ Status add_to_start(List_ptr list, Element value)
   if (new_node == NULL)
     return Failure;
   Node_ptr previous_first_node = list->first;
-  new_node->next = previous_first_node;
   list->first = new_node;
+  new_node->next = previous_first_node;
+  if (previous_first_node == NULL)
+    list->last = new_node;
   list->length += 1;
   return Success;
 }
