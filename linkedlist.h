@@ -40,6 +40,7 @@ typedef Status (*Predicate)(Element);
 typedef Element (*Reducer)(Element, Element);
 typedef void (*ElementProcessor)(Element);
 typedef Status (*Matcher)(Element, Element);
+typedef void (*Display)(Element);
 
 List_ptr create_list(void);
 
@@ -48,6 +49,7 @@ Status add_to_start(List_ptr, Element);
 Status insert_at(List_ptr, Element element, int position);
 
 List_ptr reverse(List_ptr);
+void display_list(List_ptr,Display);
 
 List_ptr map(List_ptr, Mapper);
 List_ptr filter(List_ptr, Predicate);
