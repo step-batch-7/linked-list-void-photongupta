@@ -39,11 +39,10 @@ Status add_to_start(List_ptr list, Element value)
   Node_ptr new_node = create_node(value);
   if (new_node == NULL)
     return Failure;
-  Node_ptr previous_first_node = list->first;
-  list->first = new_node;
-  new_node->next = previous_first_node;
-  if (previous_first_node == NULL)
+  if (list->first == NULL)
     list->last = new_node;
+  new_node->next = list->first;
+  list->first = new_node;
   list->length += 1;
   return Success;
 }
@@ -77,6 +76,18 @@ Status add_unique(List_ptr list, Element value, Matcher are_matching)
     p_walk = p_walk->next;
   }
   return add_to_list(list, value);
+}
+
+List_ptr reverse(List_ptr list)
+{
+  List_ptr reversed_list = create_list();
+  Node_ptr p_walk = list->first;
+  while (p_walk != NULL)
+  {
+    add_to_start(reversed_list, p_walk->element);
+    p_walk = p_walk->next;
+  }
+  return reversed_list;
 }
 
 void display_list(List_ptr list, Display displayer)
