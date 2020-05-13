@@ -1,6 +1,7 @@
 #include "linkedlist.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 Node_ptr create_node(Element data)
 {
@@ -167,12 +168,14 @@ Element remove_first_occurrence(List_ptr list, Element value, Matcher matcher)
 List_ptr remove_all_occurrences(List_ptr list, Element value, Matcher matcher)
 {
   List_ptr removed_elements = create_list();
+  Element element;
   Node_ptr p_walk = list->first;
   for (int position = 0; p_walk != NULL; position++)
   {
     if ((*matcher)(p_walk->element, value))
     {
-      add_to_list(removed_elements, remove_at(list, position));
+      element = remove_at(list, position);
+      add_to_list(removed_elements, element);
       position -= 1;
     }
     p_walk = p_walk->next;
