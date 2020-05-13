@@ -114,10 +114,36 @@ Element remove_from_end(List_ptr list)
     p_walk = p_walk->next;
   }
   free(p_walk);
-  list->last = temp;
   temp->next = NULL;
+  list->last = temp;
   list->length -= 1;
   return Success;
+}
+
+Element remove_at(List_ptr list, int position)
+{
+  Element element = malloc(sizeof(Element));
+  if (position > list->length - 1 || position < 0)
+    return NULL;
+
+  if (position == 0)
+    return remove_from_start(list);
+
+  if (position == list->length - 1)
+    return remove_from_end(list);
+
+  Node_ptr temp_node;
+  Node_ptr p_walk = list->first;
+  for (int length = 0; length < position; length++)
+  {
+    temp_node = p_walk;
+    p_walk = p_walk->next;
+  }
+  temp_node->next = p_walk->next;
+  element = p_walk->element;
+  free(p_walk);
+  list->length -= 1;
+  return element;
 }
 
 void display_list(List_ptr list, Display displayer)
