@@ -23,8 +23,8 @@ List_ptr create_list()
 Prev_current_pair_ptr create_prev_current_pair(List_ptr list)
 {
   Prev_current_pair_ptr prev_current_pair = malloc(sizeof(Prev_current_pair));
-  prev_current_pair->prev = list->first;
-  prev_current_pair->current = list->first->next;
+  prev_current_pair->prev = NULL;
+  prev_current_pair->current = list->first;
   return prev_current_pair;
 }
 

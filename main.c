@@ -24,6 +24,5 @@ Status are_char_matching(Element val1, Element val2)
 
 int main(void)
 {
-
   return 0;
 }
