@@ -33,7 +33,13 @@ typedef struct linklist
   int length;
 } LinkedList;
 
+typedef struct {
+  Node_ptr prev;
+  Node_ptr current;
+} Prev_current_pair;
+
 typedef LinkedList *List_ptr;
+typedef Prev_current_pair *Prev_current_pair_ptr;
 
 typedef Element (*Mapper)(Element);
 typedef Status (*Predicate)(Element);
@@ -44,6 +50,7 @@ typedef void (*Display)(Element);
 
 Node_ptr create_node(Element);
 List_ptr create_list(void);
+Prev_current_pair_ptr create_prev_current_pair(List_ptr);
 
 Status add_to_list(List_ptr, Element);
 Status add_to_start(List_ptr, Element);

@@ -20,6 +20,14 @@ List_ptr create_list()
   return list;
 }
 
+Prev_current_pair_ptr create_prev_current_pair(List_ptr list)
+{
+  Prev_current_pair_ptr prev_current_pair = malloc(sizeof(Prev_current_pair));
+  prev_current_pair->prev = list->first;
+  prev_current_pair->current = list->first->next;
+  return prev_current_pair;
+}
+
 int is_list_empty(List_ptr list)
 {
   return list->length == 0;
@@ -106,29 +114,32 @@ Element remove_from_start(List_ptr list)
 
 Element remove_from_end(List_ptr list)
 {
+  Prev_current_pair_ptr prev_current_pair = create_prev_current_pair(list);
   Element element = malloc(sizeof(Element));
-  if (is_list_empty(list) || list->length == 1)
+  if (is_list_empty(list))
+    return NULL;
+
+  if (list->length == 1)
     return remove_from_start(list);
 
-  Node_ptr temp = NULL;
-  Node_ptr p_walk = list->first;
-  while (p_walk->next != NULL)
+  while (prev_current_pair->current->next != NULL)
   {
-    temp = p_walk;
-    p_walk = p_walk->next;
+    prev_current_pair->prev = prev_current_pair->current;
+    prev_current_pair->current = prev_current_pair->current->next;
   }
-  element = p_walk->element;
-  free(p_walk);
-  temp->next = NULL;
-  list->last = temp;
+  element = prev_current_pair->current->element;
+  free(prev_current_pair->current);
+  prev_current_pair->prev->next = NULL;
+  list->last = prev_current_pair->prev;
   list->length -= 1;
   return element;
 }
 
 Element remove_at(List_ptr list, int position)
 {
+  Prev_current_pair_ptr prev_current_pair = create_prev_current_pair(list);
   Element element = malloc(sizeof(Element));
-  if (position > list->length - 1 || position < 0)
+  if (position >= list->length || position < 0)
     return NULL;
 
   if (position == 0)
@@ -137,16 +148,14 @@ Element remove_at(List_ptr list, int position)
   if (position == list->length - 1)
     return remove_from_end(list);
 
-  Node_ptr temp_node;
-  Node_ptr p_walk = list->first;
   for (int length = 0; length < position; length++)
   {
-    temp_node = p_walk;
-    p_walk = p_walk->next;
+    prev_current_pair->prev = prev_current_pair->current;
+    prev_current_pair->current = prev_current_pair->current->next;
   }
-  temp_node->next = p_walk->next;
-  element = p_walk->element;
-  free(p_walk);
+  prev_current_pair->prev->next = prev_current_pair->current->next;
+  element = prev_current_pair->current->element;
+  free(prev_current_pair->current);
   list->length -= 1;
   return element;
 }
