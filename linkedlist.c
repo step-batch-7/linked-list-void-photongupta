@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-Node_ptr create_node(Element data)
+Node_ptr create_node(Element element)
 {
   Node_ptr node = malloc(sizeof(Node));
-  node->element = data;
+  node->element = element;
   node->next = NULL;
   return node;
 }
@@ -48,9 +48,9 @@ Status add_to_list(List_ptr list, Element element)
   return Success;
 }
 
-Status add_to_start(List_ptr list, Element value)
+Status add_to_start(List_ptr list, Element element)
 {
-  Node_ptr new_node = create_node(value);
+  Node_ptr new_node = create_node(element);
   if (new_node == NULL)
     return Failure;
   if (list->first == NULL)
@@ -61,17 +61,17 @@ Status add_to_start(List_ptr list, Element value)
   return Success;
 }
 
-Status insert_at(List_ptr list, Element value, int position)
+Status insert_at(List_ptr list, Element element, int position)
 {
-  Node_ptr new_node = create_node(value);
+  Node_ptr new_node = create_node(element);
   if (new_node == NULL || position > list->length || position < 0)
     return Failure;
 
   if (position == 0)
-    return add_to_start(list, value);
+    return add_to_start(list, element);
 
   if (position == list->length)
-    return add_to_list(list, value);
+    return add_to_list(list, element);
 
   Node_ptr p_walk = list->first;
   for (int length = 0; length < position - 1; length++)
@@ -83,21 +83,21 @@ Status insert_at(List_ptr list, Element value, int position)
   return Success;
 }
 
-Status add_unique(List_ptr list, Element value, Matcher are_matching)
+Status add_unique(List_ptr list, Element element, Matcher are_matching)
 {
   Node_ptr p_walk = list->first;
   while (p_walk != NULL)
   {
-    if ((*are_matching)(p_walk->element, value))
+    if ((*are_matching)(p_walk->element, element))
       return Failure;
     p_walk = p_walk->next;
   }
-  return add_to_list(list, value);
+  return add_to_list(list, element);
 }
 
 Element remove_from_start(List_ptr list)
 {
-  Element element = malloc(sizeof(Element));
+  Element removed_element = malloc(sizeof(Element));
   if (is_list_empty(list))
     return NULL;
 
@@ -105,17 +105,17 @@ Element remove_from_start(List_ptr list)
     list->last = NULL;
 
   Node_ptr first_node = list->first;
-  element = first_node->element;
+  removed_element = first_node->element;
   list->first = first_node->next;
   free(first_node);
   list->length -= 1;
-  return element;
+  return removed_element;
 }
 
 Element remove_from_end(List_ptr list)
 {
   Prev_current_pair_ptr prev_current_pair = create_prev_current_pair(list);
-  Element element = malloc(sizeof(Element));
+  Element removed_element = malloc(sizeof(Element));
   if (is_list_empty(list))
     return NULL;
 
@@ -127,18 +127,18 @@ Element remove_from_end(List_ptr list)
     prev_current_pair->prev = prev_current_pair->current;
     prev_current_pair->current = prev_current_pair->current->next;
   }
-  element = prev_current_pair->current->element;
+  removed_element = prev_current_pair->current->element;
   free(prev_current_pair->current);
   prev_current_pair->prev->next = NULL;
   list->last = prev_current_pair->prev;
   list->length -= 1;
-  return element;
+  return removed_element;
 }
 
 Element remove_at(List_ptr list, int position)
 {
   Prev_current_pair_ptr prev_current_pair = create_prev_current_pair(list);
-  Element element = malloc(sizeof(Element));
+  Element removed_element = malloc(sizeof(Element));
   if (position >= list->length || position < 0)
     return NULL;
 
@@ -154,37 +154,40 @@ Element remove_at(List_ptr list, int position)
     prev_current_pair->current = prev_current_pair->current->next;
   }
   prev_current_pair->prev->next = prev_current_pair->current->next;
-  element = prev_current_pair->current->element;
+  removed_element = prev_current_pair->current->element;
   free(prev_current_pair->current);
   list->length -= 1;
-  return element;
+  return removed_element;
 }
 
-Element remove_first_occurrence(List_ptr list, Element value, Matcher matcher)
+Element remove_first_occurrence(List_ptr list, Element element, Matcher matcher)
 {
-  Node_ptr p_walk = list->first;
-  for (int position = 0; p_walk != NULL; position++)
+  Prev_current_pair_ptr prev_current_pair = create_prev_current_pair(list);
+
+  for (int position = 0; prev_current_pair->current != NULL; position++)
   {
-    if ((*matcher)(p_walk->element, value))
+    if ((*matcher)(prev_current_pair->current->element, element))
     {
+      prev_current_pair->current = prev_current_pair->prev;
       return remove_at(list, position);
     }
-    p_walk = p_walk->next;
+    prev_current_pair->prev = prev_current_pair->current;
+    prev_current_pair->current = prev_current_pair->current->next;
   }
   return NULL;
 }
 
-List_ptr remove_all_occurrences(List_ptr list, Element value, Matcher matcher)
+List_ptr remove_all_occurrences(List_ptr list, Element element, Matcher matcher)
 {
   List_ptr removed_elements = create_list();
-  Element element;
+  Element removed_element;
   Node_ptr p_walk = list->first;
   while (p_walk != NULL)
   {
-    element = remove_first_occurrence(list, value, matcher);
+    removed_element = remove_first_occurrence(list, element, matcher);
     p_walk = p_walk->next;
-    if (element)
-      add_to_list(removed_elements, element);
+    if (removed_element)
+      add_to_list(removed_elements, removed_element);
   }
   return removed_elements;
 }
